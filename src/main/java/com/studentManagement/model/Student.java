@@ -4,11 +4,13 @@
  */
 package com.studentManagement.model;
 
+import java.io.Serializable;
+
 /**
  *
  * @author andy
  */
-public class Student {
+public class Student implements Serializable{
     //this is to make automatic ID
     private static int nextID=1;
 
@@ -17,6 +19,8 @@ public class Student {
     private String fname;
 
     private String lname;
+    
+    private String gender;
 
     private int age;
 
@@ -66,8 +70,21 @@ public class Student {
         this.age = age;
     }
 
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+    
+    
     public void setMidTermGrade(double midTermGrade) {
         this.midTermGrade = midTermGrade;
+    }
+    
+     public double getMidTermGrade() {
+        return midTermGrade;
     }
 
     public double getFinalGrade() {
