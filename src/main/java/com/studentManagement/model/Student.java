@@ -29,11 +29,12 @@ public class Student implements Serializable{
     private double finalGrade;
 
 
-    public Student(String lname,String fname,int age, double midTermGrade, double finalGrade)
+    public Student(String lname,String fname,String gender,int age, double midTermGrade, double finalGrade)
     {
         id=nextID;
         this.lname=lname;
         this.fname=fname;
+        this.gender=gender;
         this.age=age;
         this.midTermGrade=midTermGrade;
         this.finalGrade=finalGrade;

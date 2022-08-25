@@ -24,72 +24,68 @@ import java.util.logging.Logger;
  * @author andy
  */
 public class StudentService {
+    private static StudentService studentService;
     String studentData ="../Data/StudentData.txt";
-    public StudentService()
+    private StudentService()
     {
         
     }
+    //singleton
+    public static StudentService getStudentService(){
+        if (studentService==null) {
+            studentService=new StudentService();
+        }
+        return studentService;
+    }
     
     //check if data file exist, else make one
-    public void checkFile(String file)
+    public void checkFile(String file) throws IOException
     {
         /** verify that file exists */
         File dataFile = new File(file);
         if (!dataFile.exists()) {
-            try {
-                dataFile.createNewFile();
-                
-            }
-            catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
+            dataFile.createNewFile();
+            initFirstData();
         }
     }
-    //Read students data from file
-    public List<Student> getAllStudent(String file){
-        List<Student> students=new ArrayList<>();
-        checkFile(file);
-        try 
-        {
-             //Read Student array from file.
-            FileInputStream fis = new FileInputStream(file);
-            try (ObjectInputStream ois = new ObjectInputStream(fis)) 
-            {
-                students = (List<Student>) ois.readObject();
-            }
+    
+    private void initFirstData() throws FileNotFoundException, IOException{
+        Student[] arr={new Student("Nguyen", "Duc","Male", 19, 8, 8),
+                            new Student("Huynh", "Huy","Male", 19, 9, 8),
+                            new Student("Vo", "Tu","Male",20, 10, 8),
+                            new Student("Dinh", "Thai","Male", 21, 7, 8),
+                            };
+        List<Student> students= new ArrayList<>();
+        for (Student student:arr) {
+            students.add(student);
         }
-            catch (FileNotFoundException e) 
-            {
-                System.out.println(e.getMessage());
-            }
-            catch (IOException | ClassNotFoundException e) 
-            {
-                System.out.println(e.getMessage());
-            }
+        FileOutputStream fos = new FileOutputStream(studentData);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject((List<Student>) students);
+        oos.close();
         
+    }
+    //Read students data from file
+    public List<Student> getStudentsFromFile() throws  ClassNotFoundException, FileNotFoundException, IOException{
+        List<Student> students=new ArrayList<>();
+        checkFile(studentData);
+         //Read Student array from file.
+        FileInputStream fis = new FileInputStream(studentData);
+        ObjectInputStream ois = new ObjectInputStream(fis);
+        students = (List<Student>) ois.readObject();
         return students;
     }
     
     //write students data from file
-    public void writeStudent(String file,List<Student> students)
+    public void writeStudentsToFile(List<Student> students) throws FileNotFoundException, IOException
     {
-       
-        checkFile(file);
-        try 
-        {
-             //Read Student array from file.
-            FileOutputStream fos = new FileOutputStream("students.ser");
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(students);
-            oos.close();
-        }
-        catch (FileNotFoundException e) 
-            {
-                System.out.println(e.getMessage());
-            }
-        catch (IOException e) 
-            {
-                System.out.println(e.getMessage());
-            }
+        checkFile(studentData);
+         //Read Student array from file.
+        FileOutputStream fos = new FileOutputStream(studentData);
+        ObjectOutputStream oos = new ObjectOutputStream(fos);
+        oos.writeObject(students);
+        oos.close();
     }
+            
+
 }

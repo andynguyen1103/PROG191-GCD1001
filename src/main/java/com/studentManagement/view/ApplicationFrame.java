@@ -86,12 +86,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         lblLName.setText("Last Name");
 
-        txtLName.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtLNameActionPerformed(evt);
-            }
-        });
-
         btnCreate.setText("Create");
         btnCreate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -102,7 +96,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         lblId.setText("ID");
 
         txtID.setEditable(false);
-        txtID.setText("123");
 
         jLabel1.setText("Result");
 
@@ -205,10 +198,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDeleteActionPerformed
-
-    private void txtLNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtLNameActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtLNameActionPerformed
 
     /**
      * @param args the command line arguments
