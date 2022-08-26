@@ -5,6 +5,7 @@
 package com.studentManagement.model;
 
 import java.io.Serializable;
+import javax.naming.spi.DirStateFactory;
 
 /**
  *
@@ -21,21 +22,25 @@ public class Student implements Serializable{
     private String lname;
     
     private String gender;
+    
+    private String inClass;
 
     private int age;
 
     private double midTermGrade;
 
     private double finalGrade;
+    
 
 
-    public Student(String lname,String fname,String gender,int age, double midTermGrade, double finalGrade)
+    public Student(String lname,String fname,String gender,int age, String inClass, double midTermGrade, double finalGrade)
     {
         id=nextID;
         this.lname=lname;
         this.fname=fname;
         this.gender=gender;
         this.age=age;
+        this.inClass=inClass;
         this.midTermGrade=midTermGrade;
         this.finalGrade=finalGrade;
         nextID++;
@@ -78,6 +83,15 @@ public class Student implements Serializable{
     public void setGender(String gender) {
         this.gender = gender;
     }
+
+    public String getInClass() {
+        return inClass;
+    }
+
+    public void setInClass(String inClass) {
+        this.inClass = inClass;
+    }
+    
     
     
     public void setMidTermGrade(double midTermGrade) {
@@ -96,8 +110,9 @@ public class Student implements Serializable{
         this.finalGrade = finalGrade;
     }
     
-    public double getResult()
+    public String getResult()
     {
-        return (midTermGrade*2+finalGrade*3)/5;
+        double arv = (midTermGrade*2+finalGrade*3)/5;
+        return arv<6.5?"Fail":arv<8?"Pass":arv<10?"Merit":"Distinct";
     }
 }

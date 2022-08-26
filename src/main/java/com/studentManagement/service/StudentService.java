@@ -25,7 +25,7 @@ import java.util.logging.Logger;
  */
 public class StudentService {
     private static StudentService studentService;
-    String studentData ="../Data/StudentData.txt";
+    String studentData ="StudentData.txt";
     private StudentService()
     {
         
@@ -50,29 +50,25 @@ public class StudentService {
     }
     
     private void initFirstData() throws FileNotFoundException, IOException{
-        Student[] arr={new Student("Nguyen", "Duc","Male", 19, 8, 8),
-                            new Student("Huynh", "Huy","Male", 19, 9, 8),
-                            new Student("Vo", "Tu","Male",20, 10, 8),
-                            new Student("Dinh", "Thai","Male", 21, 7, 8),
+        Student[] arr={new Student("Nguyen", "Duc","Female", 19, "GCD1001" , 8, 8),
+                            new Student("Huynh", "Huy","Female", 19, "GCD1001", 9, 8),
+                            new Student("Vo", "Tu","Male",20, "GCD1001" , 10, 8),
+                            new Student("Dinh", "Thai","Male", 21,"GCD1001" , 7, 8)
                             };
         List<Student> students= new ArrayList<>();
         for (Student student:arr) {
             students.add(student);
         }
-        FileOutputStream fos = new FileOutputStream(studentData);
-        ObjectOutputStream oos = new ObjectOutputStream(fos);
-        oos.writeObject((List<Student>) students);
-        oos.close();
+        writeStudentsToFile(students);
         
     }
     //Read students data from file
     public List<Student> getStudentsFromFile() throws  ClassNotFoundException, FileNotFoundException, IOException{
-        List<Student> students=new ArrayList<>();
         checkFile(studentData);
          //Read Student array from file.
         FileInputStream fis = new FileInputStream(studentData);
         ObjectInputStream ois = new ObjectInputStream(fis);
-        students = (List<Student>) ois.readObject();
+        List<Student> students = (List<Student>) ois.readObject();
         return students;
     }
     
