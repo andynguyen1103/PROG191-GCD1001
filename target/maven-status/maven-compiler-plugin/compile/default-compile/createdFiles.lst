@@ -1,1 +1,14 @@
-com\cinema\menu\menu.class
+com\studentManagement\view\ApplicationFrame$4.class
+com\studentManagement\view\ApplicationFrame$3.class
+com\studentManagement\view\ApplicationFrame$8.class
+com\studentManagement\view\ApplicationFrame$5.class
+com\studentManagement\exceptions\InvalidClassException.class
+com\studentManagement\exceptions\InvalidGradeException.class
+com\studentManagement\view\ApplicationFrame$7.class
+com\studentManagement\exceptions\InvalidAgeException.class
+com\studentManagement\view\ApplicationFrame$6.class
+com\studentManagement\service\StudentService.class
+com\studentManagement\view\ApplicationFrame$1.class
+com\studentManagement\view\ApplicationFrame$2.class
+com\studentManagement\view\ApplicationFrame.class
+com\studentManagement\model\Student.class

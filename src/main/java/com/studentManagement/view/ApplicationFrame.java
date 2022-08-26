@@ -4,10 +4,14 @@
  */
 package com.studentManagement.view;
 
+import com.studentManagement.exceptions.InvalidAgeException;
+import com.studentManagement.exceptions.InvalidClassException;
+import com.studentManagement.exceptions.InvalidGradeException;
 import com.studentManagement.model.Student;
 import com.studentManagement.service.StudentService;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -145,11 +149,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 btnDeleteMouseClicked(evt);
             }
         });
-        btnDelete.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteActionPerformed(evt);
-            }
-        });
 
         btnEdit.setText("Edit");
         btnEdit.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -162,11 +161,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         btnCreate.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnCreateMouseClicked(evt);
-            }
-        });
-        btnCreate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCreateActionPerformed(evt);
             }
         });
 
@@ -284,14 +278,6 @@ public class ApplicationFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCreateActionPerformed
-
-    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDeleteActionPerformed
-
     private void studentTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_studentTableMousePressed
         try {
             // TODO add your handling code here:
@@ -315,7 +301,39 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_studentTableMousePressed
 
     private void btnEditMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnEditMouseClicked
-        // TODO add your handling code here:
+        if (studentTable.getSelectedRow()==-1) {
+            JOptionPane.showMessageDialog(null, "please choose a student to edit");
+        }
+        else
+        {
+            try {
+                //validate
+                validateAge(txtAge.getText());
+                validateClass(txtClass.getText());
+                validateGrade(txtMidTerm.getText());
+                validateGrade(txtFinal.getText());                           
+                //replace 
+                List<Student> students= StudentService.getStudentService().getStudentsFromFile();
+                Student oldStudent = students.get(studentTable.getSelectedRow());  
+                Student newStudent = new Student();  
+                newStudent.setFname(txtFName.getText());
+                newStudent.setLname(txtLName.getText());
+                newStudent.setAge(Integer.parseInt(txtAge.getText()));
+                newStudent.setGender(cbxGender.getSelectedItem().toString());
+                newStudent.setInClass(txtClass.getText());
+                newStudent.setMidTermGrade(Double.parseDouble(txtMidTerm.getText()));
+                newStudent.setFinalGrade(Double.parseDouble(txtFinal.getText()));
+                students.set(students.lastIndexOf(oldStudent), newStudent);
+                StudentService.getStudentService().writeStudentsToFile(students);
+                loadStudentTable();
+            } catch (ClassNotFoundException | IOException ex) {
+                JOptionPane.showMessageDialog(null,"something is wrong");
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
+            } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+            } 
+        }  
     }//GEN-LAST:event_btnEditMouseClicked
 
     private void jPanel1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jPanel1MouseClicked
@@ -338,7 +356,46 @@ public class ApplicationFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jPanel1MouseClicked
 
     private void btnCreateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCreateMouseClicked
-        // TODO add your handling code here:
+        if (!txtID.getText().equals("")) 
+        {
+            studentTable.getSelectionModel().clearSelection();
+            txtLName.setText("");
+            txtFName.setText("");
+            txtAge.setText("");
+            txtClass.setText("");
+            txtID.setText("");
+            txtMidTerm.setText("");
+            txtFinal.setText("");
+            txtResult.setText("");
+            cbxGender.setSelectedItem(null);
+            JOptionPane.showMessageDialog(null,"can't create new student from existing ones, try again");
+        }    
+        else{
+            try {
+                validateAge(txtAge.getText());
+                validateClass(txtClass.getText());
+                validateGrade(txtMidTerm.getText());
+                validateGrade(txtFinal.getText());
+                List<Student> students= StudentService.getStudentService().getStudentsFromFile();
+                Student student = new Student();  
+                student.setFname(txtFName.getText());
+                student.setLname(txtLName.getText());
+                student.setAge(Integer.parseInt(txtAge.getText()));
+                student.setGender(cbxGender.getSelectedItem().toString());
+                student.setInClass(txtClass.getText());
+                student.setMidTermGrade(Double.parseDouble(txtMidTerm.getText()));
+                student.setFinalGrade(Double.parseDouble(txtFinal.getText()));
+                students.add(student);
+                StudentService.getStudentService().writeStudentsToFile(students);
+                loadStudentTable();
+            } catch (ClassNotFoundException | IOException ex) {
+                JOptionPane.showMessageDialog(null,"something is wrong");
+            } catch (ParseException ex) {
+                JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
+            } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
+                JOptionPane.showMessageDialog(null,ex.getMessage());
+            }
+        }
     }//GEN-LAST:event_btnCreateMouseClicked
 
     private void btnDeleteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDeleteMouseClicked
@@ -347,7 +404,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
         }
         else
         {
-            try 
+            int confirm=JOptionPane.showConfirmDialog(null, "Do you want to delete this item");
+            if (confirm==JOptionPane.YES_OPTION) {
+                try 
             {
                 List<Student> students= StudentService.getStudentService().getStudentsFromFile();
                 Student student = students.get(studentTable.getSelectedRow());
@@ -358,7 +417,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
             }
-            loadStudentTable();  
+            loadStudentTable(); 
+            }    
         }  
     }//GEN-LAST:event_btnDeleteMouseClicked
 
@@ -397,6 +457,18 @@ public class ApplicationFrame extends javax.swing.JFrame {
             }
         });
     }
+    public void NextID() throws ClassNotFoundException, IOException
+    {
+        List<Student> students= StudentService.getStudentService().getStudentsFromFile();
+        int biggestID=0;
+        for (Student student : students) {
+            if (biggestID<student.getId()) {
+                biggestID=student.getId();
+            }
+        }
+        //get the last student id and +1
+        Student.setNextID(biggestID);
+    }
     public final void loadStudentTable() {
         
         DefaultTableModel defaultTableModel = new DefaultTableModel(){
@@ -423,6 +495,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 defaultTableModel.addRow(new Object[]{student.getId(),student.getFname(),student.getLname(),
                                                         student.getAge(),student.getGender(),student.getInClass()});
             }
+            NextID();
         } catch (ClassNotFoundException e) {
             JOptionPane.showMessageDialog(null,"something is wrong with class");;
         }
@@ -430,6 +503,31 @@ public class ApplicationFrame extends javax.swing.JFrame {
              JOptionPane.showMessageDialog(null,"something is wrong with IO");
          }
     }
+    
+    /*ITS VALIDATING TIME*/
+    public void validateAge(String Age) throws ParseException, InvalidAgeException
+    {
+        int age = Integer.parseInt(Age);
+        if (0>=age) {
+            throw new InvalidAgeException();
+        }
+    }
+    public void validateGrade(String grade) throws ParseException, InvalidGradeException
+    {
+        double valGrade = Double.parseDouble(grade);
+        if (0>=valGrade) {
+            throw new InvalidGradeException();
+        }
+    }
+    public void validateClass(String inClass) throws InvalidClassException
+    {
+        if (inClass.lastIndexOf("GCD")!=0 | inClass.length()!=7) 
+        {
+            throw new InvalidClassException();
+        }
+    }
+    
+    
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

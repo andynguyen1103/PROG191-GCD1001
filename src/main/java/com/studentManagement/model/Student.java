@@ -31,7 +31,11 @@ public class Student implements Serializable{
 
     private double finalGrade;
     
-
+    
+    public  Student(){
+        id=nextID;
+        nextID++;
+    }
 
     public Student(String lname,String fname,String gender,int age, String inClass, double midTermGrade, double finalGrade)
     {
@@ -44,6 +48,10 @@ public class Student implements Serializable{
         this.midTermGrade=midTermGrade;
         this.finalGrade=finalGrade;
         nextID++;
+    }
+
+    public static void setNextID(int nextID) {
+        Student.nextID = nextID;
     }
 
 
