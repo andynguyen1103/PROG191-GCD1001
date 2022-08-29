@@ -387,7 +387,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 student.setFinalGrade(Double.parseDouble(txtFinal.getText()));
                 students.add(student);
                 StudentService.getStudentService().writeStudentsToFile(students);
-                loadStudentTable();
+                reloadInterface();
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
             } catch (ParseException ex) {
@@ -414,10 +414,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
                 //write to file
                 StudentService.getStudentService().writeStudentsToFile(students);
+                
+                
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
             }
-            loadStudentTable(); 
+            
+            reloadInterface();
             }    
         }  
     }//GEN-LAST:event_btnDeleteMouseClicked
@@ -467,7 +470,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
             }
         }
         //get the last student id and +1
-        Student.setNextID(biggestID);
+        Student.setNextID(biggestID+1);
     }
     public final void loadStudentTable() {
         
@@ -504,6 +507,20 @@ public class ApplicationFrame extends javax.swing.JFrame {
          }
     }
     
+    public void reloadInterface(){
+        loadStudentTable();
+        studentTable.getSelectionModel().clearSelection();
+        txtLName.setText("");
+        txtFName.setText("");
+        txtAge.setText("");
+        txtClass.setText("");
+        txtID.setText("");
+        txtMidTerm.setText("");
+        txtFinal.setText("");
+        txtResult.setText("");
+        cbxGender.setSelectedItem(null);
+    }
+    
     /*ITS VALIDATING TIME*/
     public void validateAge(String Age) throws ParseException, InvalidAgeException
     {
@@ -515,7 +532,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
     public void validateGrade(String grade) throws ParseException, InvalidGradeException
     {
         double valGrade = Double.parseDouble(grade);
-        if (0>=valGrade) {
+        if (0>=valGrade | valGrade>10) {
             throw new InvalidGradeException();
         }
     }
