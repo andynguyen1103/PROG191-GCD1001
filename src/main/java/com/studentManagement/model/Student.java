@@ -36,6 +36,10 @@ public class Student implements Serializable{
         id=nextID;
         nextID++;
     }
+    
+    public Student(int id){
+        this.id=id;
+    }
 
     public Student(String lname,String fname,String gender,int age, String inClass, double midTermGrade, double finalGrade)
     {

@@ -315,7 +315,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 //replace 
                 List<Student> students= StudentService.getStudentService().getStudentsFromFile();
                 Student oldStudent = students.get(studentTable.getSelectedRow());  
-                Student newStudent = new Student();  
+                Student newStudent = new Student(oldStudent.getId());  
                 newStudent.setFname(txtFName.getText());
                 newStudent.setLname(txtLName.getText());
                 newStudent.setAge(Integer.parseInt(txtAge.getText()));
@@ -328,7 +328,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 loadStudentTable();
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
-            } catch (ParseException ex) {
+            } catch (ParseException | NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
             } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
                 JOptionPane.showMessageDialog(null,ex.getMessage());
@@ -390,7 +390,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 reloadInterface();
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
-            } catch (ParseException ex) {
+            } catch (ParseException | NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
             } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
                 JOptionPane.showMessageDialog(null,ex.getMessage());
@@ -529,7 +529,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
             throw new InvalidAgeException();
         }
     }
-    public void validateGrade(String grade) throws ParseException, InvalidGradeException
+    public void validateGrade(String grade) throws ParseException, InvalidGradeException,NumberFormatException
     {
         double valGrade = Double.parseDouble(grade);
         if (0>=valGrade | valGrade>10) {
