@@ -12,6 +12,8 @@ import com.studentManagement.service.StudentService;
 import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -68,6 +70,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
         btnEdit = new javax.swing.JButton();
         btnCreate = new javax.swing.JButton();
         lblFinal = new javax.swing.JLabel();
+        btnSort = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Hello");
@@ -166,6 +169,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         lblFinal.setText("Final");
 
+        btnSort.setText("Sort by gender");
+        btnSort.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnSortMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -199,25 +209,29 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnCreate)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(cbxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblAge)
-                        .addGap(18, 18, 18)
-                        .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(cbxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblAge)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(122, 122, 122))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnDelete)
-                        .addGap(49, 49, 49))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(122, 122, 122))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnSort)
+                        .addGap(78, 78, 78))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,7 +242,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCreate)
                     .addComponent(btnDelete)
-                    .addComponent(btnEdit))
+                    .addComponent(btnEdit)
+                    .addComponent(btnSort))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFName, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -425,6 +440,40 @@ public class ApplicationFrame extends javax.swing.JFrame {
         }  
     }//GEN-LAST:event_btnDeleteMouseClicked
 
+    private void btnSortMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnSortMouseClicked
+        // TODO add your handling code here:
+        DefaultTableModel defaultTableModel = new DefaultTableModel(){
+            //forbid edit cells
+            @Override
+            public boolean isCellEditable(int row, int column) {
+               //all cells false
+               return false;
+            }
+        };
+        studentTable.setModel(defaultTableModel);
+        
+        defaultTableModel.addColumn("ID");
+        defaultTableModel.addColumn("First Name");
+        defaultTableModel.addColumn("Last Name");
+        defaultTableModel.addColumn("Age");
+        defaultTableModel.addColumn("Gender");
+        defaultTableModel.addColumn("Class");
+         try {
+            List<Student> students= StudentService.getStudentService().getStudentsFromFile();
+            students.sort(( Student object1, Student object2) -> object1.getGender().compareTo(object2.getGender()));
+            for (Student student : students) 
+            {
+                defaultTableModel.addRow(new Object[]{student.getId(),student.getFname(),student.getLname(),
+                                                        student.getAge(),student.getGender(),student.getInClass()});
+            }
+        } catch (ClassNotFoundException e) {
+            JOptionPane.showMessageDialog(null,"something is wrong with class");;
+        }
+         catch (IOException e) {
+             JOptionPane.showMessageDialog(null,"something is wrong with IO");
+         }
+    }//GEN-LAST:event_btnSortMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -546,11 +595,13 @@ public class ApplicationFrame extends javax.swing.JFrame {
     
     
     
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnSort;
     private javax.swing.JComboBox<String> cbxGender;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
