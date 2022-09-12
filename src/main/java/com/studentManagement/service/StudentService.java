@@ -55,10 +55,10 @@ public class StudentService {
     }
     
     private void initFirstData() throws FileNotFoundException, IOException{
-        Student[] arr={new Student("Nguyen", "Duc","Female", 19, "GCD1001" , 8, 8),
+        Student[] arr={new Student("Nguyen", "Duc","Female", 19, "GCD1001" , 7, 7),
                             new Student("Huynh", "Huy","Female", 19, "GCD1001", 9, 8),
-                            new Student("Vo", "Tu","Male",20, "GCD1001" , 10, 8),
-                            new Student("Dinh", "Thai","Male", 21,"GCD1001" , 7, 8)
+                            new Student("Vo", "Tu","Male",20, "GCD1001" , 10, 9),
+                            new Student("Dinh", "Thai","Male", 21,"GCD1001" , 5, 8)
                             };
         List<Student> students= new ArrayList<>();
         for (Student student:arr) {
@@ -92,10 +92,9 @@ public class StudentService {
     {
         // Initialize a new Workbook
         Workbook book = new Workbook();
-
+        
         // Obtaining the reference of the worksheet
         Worksheet sheet = book.getWorksheets().get(0);
-        
         // Set Custom header
         sheet.getCells().get(0, 0).putValue("ID");
         sheet.getCells().get(0, 1).putValue("First Name");       
