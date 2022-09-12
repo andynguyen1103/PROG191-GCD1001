@@ -12,9 +12,12 @@ import com.studentManagement.service.StudentService;
 import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
@@ -68,6 +71,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
         btnEdit = new javax.swing.JButton();
         btnCreate = new javax.swing.JButton();
         lblFinal = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        cbxSortBy = new javax.swing.JComboBox<>();
+        btnExport = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Hello");
@@ -166,6 +172,22 @@ public class ApplicationFrame extends javax.swing.JFrame {
 
         lblFinal.setText("Final");
 
+        jLabel2.setText("Sort by:");
+
+        cbxSortBy.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ID", "FName", "Age", "Gender", "Class" }));
+        cbxSortBy.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbxSortByActionPerformed(evt);
+            }
+        });
+
+        btnExport.setText("Export");
+        btnExport.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnExportMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -200,24 +222,30 @@ public class ApplicationFrame extends javax.swing.JFrame {
                         .addComponent(btnCreate)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbxGender, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtResult, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(lblAge)
                         .addGap(18, 18, 18)
-                        .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtAge, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(122, 122, 122))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cbxSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(90, 90, 90))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addComponent(btnDelete)
-                        .addGap(49, 49, 49))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 144, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(122, 122, 122))
+                        .addGap(18, 18, 18)
+                        .addComponent(btnExport)
+                        .addGap(110, 110, 110))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,7 +256,8 @@ public class ApplicationFrame extends javax.swing.JFrame {
                     .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCreate)
                     .addComponent(btnDelete)
-                    .addComponent(btnEdit))
+                    .addComponent(btnEdit)
+                    .addComponent(btnExport))
                 .addGap(23, 23, 23)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblFName, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -242,7 +271,9 @@ public class ApplicationFrame extends javax.swing.JFrame {
                     .addComponent(lblLName)
                     .addComponent(txtLName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblClass)
-                    .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtClass, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2)
+                    .addComponent(cbxSortBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMidTerm)
@@ -282,7 +313,11 @@ public class ApplicationFrame extends javax.swing.JFrame {
         try {
             // TODO add your handling code here:
             List<Student> students= StudentService.getStudentService().getStudentsFromFile();
-            Student student = students.get(studentTable.getSelectedRow());
+            //find the student with matching id using steam api and lamda expression
+            Student student = (Student) students.stream()
+                                                .filter(st->st.getId()== (int) studentTable.getValueAt(studentTable.getSelectedRow(), 0))
+                                                .findAny()
+                                                .orElse(null);
             txtLName.setText(student.getLname());
             txtFName.setText(student.getFname());
             txtAge.setText(String.valueOf(student.getAge()));
@@ -314,8 +349,11 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 validateGrade(txtFinal.getText());                           
                 //replace 
                 List<Student> students= StudentService.getStudentService().getStudentsFromFile();
-                Student oldStudent = students.get(studentTable.getSelectedRow());  
-                Student newStudent = new Student();  
+                Student oldStudent = (Student) students.stream()
+                                                .filter(st->st.getId()== (int) studentTable.getValueAt(studentTable.getSelectedRow(), 0))
+                                                .findAny()
+                                                .orElse(null);  
+                Student newStudent = new Student(oldStudent.getId());  
                 newStudent.setFname(txtFName.getText());
                 newStudent.setLname(txtLName.getText());
                 newStudent.setAge(Integer.parseInt(txtAge.getText()));
@@ -328,7 +366,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 loadStudentTable();
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
-            } catch (ParseException ex) {
+            } catch (ParseException | NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
             } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
                 JOptionPane.showMessageDialog(null,ex.getMessage());
@@ -390,7 +428,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 reloadInterface();
             } catch (ClassNotFoundException | IOException ex) {
                 JOptionPane.showMessageDialog(null,"something is wrong");
-            } catch (ParseException ex) {
+            } catch (ParseException | NumberFormatException ex) {
                 JOptionPane.showMessageDialog(null,"please check inputs of age or grades");
             } catch (InvalidAgeException | InvalidClassException | InvalidGradeException ex) {
                 JOptionPane.showMessageDialog(null,ex.getMessage());
@@ -409,7 +447,10 @@ public class ApplicationFrame extends javax.swing.JFrame {
                 try 
             {
                 List<Student> students= StudentService.getStudentService().getStudentsFromFile();
-                Student student = students.get(studentTable.getSelectedRow());
+                Student student = (Student) students.stream()
+                                                .filter(st->st.getId()== (int) studentTable.getValueAt(studentTable.getSelectedRow(), 0))
+                                                .findAny()
+                                                .orElse(null);
                 students.remove(student);
 
                 //write to file
@@ -424,6 +465,26 @@ public class ApplicationFrame extends javax.swing.JFrame {
             }    
         }  
     }//GEN-LAST:event_btnDeleteMouseClicked
+
+    private void cbxSortByActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbxSortByActionPerformed
+        // TODO add your handling code here:
+       loadStudentTable();
+    }//GEN-LAST:event_cbxSortByActionPerformed
+
+    private void btnExportMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnExportMouseClicked
+        //confirm panel
+        int confirm = JOptionPane.showConfirmDialog(null,"Do you want to export to xls file?");
+        if (confirm==JOptionPane.YES_OPTION) {
+            try 
+            {
+                StudentService.getStudentService().exportToXls();
+                JOptionPane.showMessageDialog(null, "successfully exported");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage());
+            }
+        }
+        
+    }//GEN-LAST:event_btnExportMouseClicked
 
     /**
      * @param args the command line arguments
@@ -493,6 +554,23 @@ public class ApplicationFrame extends javax.swing.JFrame {
         //get student from file
         try {
             List<Student> students= StudentService.getStudentService().getStudentsFromFile();
+            //see which sort by is using
+            if (cbxSortBy.getSelectedItem().toString().equals("FName")) 
+            {
+                students.sort((Student a, Student b) -> a.getFname().compareTo(b.getFname()));
+            }
+                else if (cbxSortBy.getSelectedItem().toString().equals("Age")) 
+                {
+                    students.sort((Student a, Student b) -> a.getAge() - b.getAge());
+                }
+                    else if (cbxSortBy.getSelectedItem().toString().equals("Gender")) 
+                    {
+                        students.sort((Student a, Student b) -> a.getGender().compareTo(b.getGender()));
+                    }
+                        else if (cbxSortBy.getSelectedItem().toString().equals("Class")) 
+                        {
+                            students.sort((Student a, Student b) -> a.getInClass().compareTo(b.getInClass()));
+                        }
             for (Student student : students) 
             {
                 defaultTableModel.addRow(new Object[]{student.getId(),student.getFname(),student.getLname(),
@@ -529,7 +607,7 @@ public class ApplicationFrame extends javax.swing.JFrame {
             throw new InvalidAgeException();
         }
     }
-    public void validateGrade(String grade) throws ParseException, InvalidGradeException
+    public void validateGrade(String grade) throws ParseException, InvalidGradeException,NumberFormatException
     {
         double valGrade = Double.parseDouble(grade);
         if (0>=valGrade | valGrade>10) {
@@ -543,16 +621,15 @@ public class ApplicationFrame extends javax.swing.JFrame {
             throw new InvalidClassException();
         }
     }
-    
-    
-    
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreate;
     private javax.swing.JButton btnDelete;
     private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnExport;
     private javax.swing.JComboBox<String> cbxGender;
+    private javax.swing.JComboBox<String> cbxSortBy;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblAge;
